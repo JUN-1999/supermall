@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-  <ul>
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
-    <li>5</li>
-  </ul>
+    <router-view></router-view>
+    <main-tab-bar></main-tab-bar>
   </div>
 </template>
 
 <script>
+import MainTabBar from "components/content/mainTabbar/MainTabBar";
+
 export default {
   name: "App",
-  components: {}
+  components: {
+    MainTabBar
+  }
 };
 </script>
 
