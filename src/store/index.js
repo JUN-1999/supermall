@@ -1,34 +1,32 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import mutations from "./mutations";
+import actions from "./actions";
 // 1.安装插件
 Vue.use(Vuex);
 
+const state = {
+  cartList: []
+};
+
 // 2.创建Store对象
 const store = new Vuex.Store({
-  state: {
-    cartList: []
-  },
-  mutations: {
-    addCart(state, payload) {
-      // 1. payload 新添加的商品
-      //   查找之前数组中是否有该数组
-      //   let oldProduct = null;
-      //   for (let item of state.cartList) {
-      //     if (item.iid === payload.iid) {
-      //       oldProduct = item;
-      //     }
-      //   }
-      let oldProduct = state.cartList.find(item => item.iid === payload.iid);
-      // 2. 判断oldProduct
-      if (oldProduct) {
-        oldProduct.count += 1;
-      } else {
-        payload.count = 1;
-        state.cartList.push(payload);
-      }
-    }
-  }
+  state,
+  mutations,
+  //  mutations 唯一的目的，修改state状态
+  // mutations中的每个方法尽可能完成的事件比较单一
+  //   查找之前数组中是否有该数组
+  //   let oldProduct = null;
+  //   for (let item of state.cartList) {
+  //     if (item.iid === payload.iid) {
+  //       oldProduct = item;
+  //     }
+  //   }
+  //
+  //
+  //
+  actions
 });
 
 // 3.挂载Vue实例上

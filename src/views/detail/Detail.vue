@@ -12,7 +12,7 @@
       @scroll="contentScroll"
     >
       <ul>
-        <li v-for="(item,index) in $store.state.cartList" :key="index">
+        <li v-for="(item, index) in $store.state.cartList" :key="index">
           {{ item }}
         </li>
       </ul>
@@ -145,7 +145,8 @@ export default {
 
       // 2.将我们的商品加入购物车
       // this.$store.cartList.push()
-      this.$store.commit("addCart", product);
+      // this.$store.commit("addCart", product);
+      this.$store.dispatch("addCart", product);
     }
   },
   created() {
