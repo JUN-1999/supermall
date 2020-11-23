@@ -46,10 +46,10 @@ import Scroll from "components/common/scroll/Scroll";
 
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
-import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/util.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 export default {
   name: "Home",
@@ -61,8 +61,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop
   },
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -73,7 +73,7 @@ export default {
         sell: { page: 0, list: [] }
       },
       currentType: "pop",
-      isShowBackTop: false,
+
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0
@@ -94,7 +94,10 @@ export default {
   },
   deactivated() {
     console.log("deactivated");
+    // 1.保存y值
     this.saveY = this.$refs.scroll.getScrollY();
+    // 2.取消全局事件的监听
+    this.$bus.$off("itemImgLoad", this.itemImgListener);
   },
   created() {
     // 1.请求多个数据
@@ -107,13 +110,14 @@ export default {
   mounted() {
     // 图片加载完成的事件监听
     // 防抖动函数的返回值
-    const refresh = debounce(this.$refs.scroll.refresh, 500);
-
-    // 3.简听item图片加载完成
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-      // this.$refs.scroll && this.$refs.scroll.refresh();
-    });
+    // const refresh = debounce(this.$refs.scroll.refresh, 500);
+    // // 3.简听item图片加载完成
+    // // 对监听的事件进行保存
+    // this.itemImgListener = () => {
+    //   refresh();
+    //   // this.$refs.scroll && this.$refs.scroll.refresh();
+    // };
+    // this.$bus.$on("itemImageLoad", itemImgListener);
   },
   methods: {
     // ///////////
@@ -148,10 +152,6 @@ export default {
       this.$refs.tabControl2.currentIndex = index;
     },
 
-    // 返回顶部
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     //判断返回底部图标是否显示
     contentScroll(position) {
       // 1.判断BackTop是否显示
