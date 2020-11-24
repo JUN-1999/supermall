@@ -11,11 +11,6 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
-      <ul>
-        <li v-for="(item, index) in $store.state.cartList" :key="index">
-          {{ item }}
-        </li>
-      </ul>
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -35,6 +30,7 @@
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
     <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
+    <!-- <toast :message="message" :isShow="isShow"></toast>-->
   </div>
 </template>
 
@@ -60,6 +56,8 @@ import {
 } from "network/detail.js";
 import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
+// import Toast from "components/common/toast/Toast";
+
 export default {
   name: "Detail",
   components: {
@@ -74,6 +72,7 @@ export default {
     DetailCommentInfo,
     Scroll,
     GoodsList
+    // Toast
   },
   mixins: [itemListenerMixin, backTopMixin],
   data() {
@@ -90,6 +89,8 @@ export default {
       getThemeTopy: null,
       currentIndex: 0,
       isShowBackTop: 0
+      // message: "",
+      // isShow: false
     };
   },
   methods: {
@@ -143,10 +144,20 @@ export default {
       product.price = this.goods.realPrice;
       product.iid = this.iid;
 
-      // 2.将我们的商品加入购物车
+      // 2.将我们的商品加入购物车（1.Promise 2.mapActions）
       // this.$store.cartList.push()
       // this.$store.commit("addCart", product);
-      this.$store.dispatch("addCart", product);
+      this.$store.dispatch("addCart", product).then(res => {
+        // this.isShow = true;
+        // this.message = res;
+
+        // setTimeout(() => {
+        //   this.isShow = false;
+        //   this.message = "";
+        // }, 1500);
+
+        this.$toast.show(res, 2000);
+      });
     }
   },
   created() {
